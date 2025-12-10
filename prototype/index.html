@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Url2Video.ai - Turn Product Links into Viral Videos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #4F46E5, #9333EA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .blob {
+            position: absolute;
+            filter: blur(40px);
+            z-index: -1;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <nav class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+        <div class="text-2xl font-bold text-indigo-600 flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-bolt"></i> Url2Video<span class="text-gray-400 font-light text-sm">.ai</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-gray-600 font-medium">
+            <a href="#" class="hover:text-indigo-600">Features</a>
+            <a href="#" class="hover:text-indigo-600">Pricing</a>
+            <a href="#" class="hover:text-indigo-600">API Docs</a>
+        </div>
+        <div>
+            <a href="#" class="px-5 py-2.5 rounded-full bg-white border border-gray-200 text-gray-700 font-medium hover:border-indigo-600 transition">Log In</a>
+        </div>
+    </nav>
+
+    <section class="relative pt-20 pb-32 px-6 overflow-hidden">
+        <div class="blob bg-purple-300 w-96 h-96 rounded-full top-0 left-0 mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div class="blob bg-indigo-300 w-96 h-96 rounded-full top-0 right-0 mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="inline-block px-4 py-1.5 mb-6 text-xs font-semibold tracking-wider text-indigo-800 uppercase bg-indigo-100 rounded-full">
+                ✨ New: Supports Amazon, Shopify & TikTok Shop
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-6">
+                Turn Product Links into <br>
+                <span class="gradient-text">Viral Marketing Videos</span>
+            </h1>
+            <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+                Paste any product URL. <strong>Url2Video.ai</strong> automatically scrapes images, writes scripts, and renders high-converting videos in 30 seconds.
+            </p>
+
+            <div class="bg-white p-2 rounded-2xl shadow-xl flex flex-col md:flex-row gap-2 border border-gray-100 max-w-3xl mx-auto transform transition hover:scale-[1.01]">
+                <div class="flex-grow flex items-center px-4 bg-gray-50 rounded-xl">
+                    <i class="fa-solid fa-link text-gray-400 mr-3"></i>
+                    <input type="text" id="urlInput" placeholder="Paste product URL here (e.g. amazon.com/dp/...)" class="w-full bg-transparent border-none focus:ring-0 py-4 text-gray-700 outline-none">
+                </div>
+                <button onclick="startDemo()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl transition flex items-center justify-center gap-2 text-lg shadow-lg shadow-indigo-200">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate
+                </button>
+            </div>
+            <p class="mt-4 text-sm text-gray-500">No credit card required · Free Trial · 30-Second Turnaround</p>
+        </div>
+
+        <div class="max-w-6xl mx-auto mt-20 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="bg-white p-4 rounded-2xl shadow-lg border border-gray-100">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs font-bold text-gray-500">INPUT: URL</span>
+                    <i class="fa-brands fa-chrome text-2xl text-gray-400"></i>
+                </div>
+                <img src="https://placehold.co/600x400/f3f4f6/a3a3a3?text=Product+Page+Screenshot" alt="Product Page" class="rounded-lg w-full">
+            </div>
+            <div class="relative">
+                <div class="absolute -left-4 top-1/2 -translate-y-1/2 bg-white rounded-full p-3 shadow-xl z-10 hidden md:block">
+                    <i class="fa-solid fa-arrow-right text-indigo-600 text-xl"></i>
+                </div>
+                <div class="bg-gray-900 p-2 rounded-2xl shadow-2xl border border-gray-800 rotate-1 hover:rotate-0 transition duration-500">
+                     <div class="flex justify-between items-center mb-3 px-2">
+                        <span class="text-xs font-bold text-gray-400">OUTPUT: Url2Video.ai</span>
+                        <i class="fa-brands fa-tiktok text-white text-xl"></i>
+                    </div>
+                    <img src="https://placehold.co/600x400/1f2937/FFFFFF?text=AI+Generated+Video+%E2%96%B6" alt="AI Video" class="rounded-lg w-full opacity-90">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-10 border-y border-gray-200 bg-white">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-sm text-gray-500 font-semibold uppercase tracking-widest mb-6">Optimized for</p>
+            <div class="flex flex-wrap justify-center gap-12 text-gray-400 text-3xl opacity-60">
+                <i class="fa-brands fa-shopify hover:text-green-600 transition"></i>
+                <i class="fa-brands fa-amazon hover:text-orange-500 transition"></i>
+                <i class="fa-brands fa-tiktok hover:text-black transition"></i>
+                <i class="fa-brands fa-instagram hover:text-pink-600 transition"></i>
+                <i class="fa-brands fa-youtube hover:text-red-600 transition"></i>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">From URL to Video in 3 Steps</h2>
+                <p class="text-gray-600">The fastest workflow for e-commerce sellers.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-spider"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">1. AI Scraping</h3>
+                    <p class="text-gray-500 leading-relaxed">We extract product details, prices, and high-res images directly from your link.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">2. Magic Scripting</h3>
+                    <p class="text-gray-500 leading-relaxed">Our LLM writes a sales-focused script and generates a realistic AI voiceover.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="w-14 h-14 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-download"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">3. Instant Render</h3>
+                    <p class="text-gray-500 leading-relaxed">Get a finished MP4 file with animations, subtitles, and music. Ready to post.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="text-2xl font-bold mb-6">Join 10,000+ Sellers on Url2Video.ai</div>
+            <button class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-full transition">
+                Start Creating for Free
+            </button>
+            <p class="mt-8 text-gray-500 text-sm">© 2025 Url2Video.ai. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="modalOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        
+        <div id="progressState" class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md text-center">
+            <div class="mb-6 relative h-32 flex items-center justify-center">
+                <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600"></div>
+                <i class="fa-solid fa-robot text-indigo-600 absolute text-xl"></i>
+            </div>
+            <h3 id="progressText" class="text-xl font-bold text-gray-800 mb-2">Analyzing URL...</h3>
+            <p class="text-gray-500 text-sm mb-6">Url2Video is extracting assets</p>
+            
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2 overflow-hidden">
+                <div id="progressBar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 5%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-400 font-mono">
+                <span>START</span>
+                <span id="progressPercent">5%</span>
+            </div>
+        </div>
+
+        <div id="finishState" class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md text-center hidden">
+            <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Success! 🎉</h3>
+            <p class="text-gray-600 mb-6">Your video <span class="font-mono text-indigo-600 bg-indigo-50 px-1 rounded">url2video_demo.mp4</span> is ready.</p>
+            
+            <div class="text-left mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Where should we send it?</label>
+                <input type="email" placeholder="name@company.com" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+            </div>
+            
+            <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition mb-3">
+                Reveal My Video
+            </button>
+            <button onclick="closeModal()" class="text-gray-400 text-sm hover:text-gray-600 underline">Close preview</button>
+        </div>
+
+    </div>
+
+    <script>
+        const modalOverlay = document.getElementById('modalOverlay');
+        const progressState = document.getElementById('progressState');
+        const finishState = document.getElementById('finishState');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const progressPercent = document.getElementById('progressPercent');
+        const urlInput = document.getElementById('urlInput');
+
+        const steps = [
+            { pct: 10, text: "Connecting to Url2Video Engine..." },
+            { pct: 30, text: "Scraping product images..." },
+            { pct: 50, text: "Analyzing pain points..." },
+            { pct: 70, text: "Generating viral script..." },
+            { pct: 85, text: "Synthesizing AI voice..." },
+            { pct: 95, text: "Final Rendering..." },
+            { pct: 100, text: "Done!" }
+        ];
+
+        function startDemo() {
+            const url = urlInput.value.trim();
+            if(!url) {
+                alert("Please paste a URL first!");
+                urlInput.focus();
+                return;
+            }
+
+            modalOverlay.classList.remove('hidden');
+            progressState.classList.remove('hidden');
+            finishState.classList.add('hidden');
+            progressBar.style.width = '0%';
+            
+            let currentStep = 0;
+            const interval = setInterval(() => {
+                if (currentStep >= steps.length) {
+                    clearInterval(interval);
+                    showFinish();
+                    return;
+                }
+                
+                const step = steps[currentStep];
+                progressBar.style.width = step.pct + '%';
+                progressText.innerText = step.text;
+                progressPercent.innerText = step.pct + '%';
+                
+                currentStep++;
+            }, 800); 
+        }
+
+        function showFinish() {
+            setTimeout(() => {
+                progressState.classList.add('hidden');
+                finishState.classList.remove('hidden');
+            }, 500);
+        }
+
+        function closeModal() {
+            modalOverlay.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
