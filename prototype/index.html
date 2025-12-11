@@ -184,8 +184,8 @@
 
     </div>
 
-    <script>
-async function startDemo() {
+<script>
+        async function startDemo() {
             const url = urlInput.value.trim();
             if(!url) {
                 alert("Please paste a URL first!");
@@ -193,53 +193,53 @@ async function startDemo() {
                 return;
             }
 
-            // 1. 打开弹窗，显示进度条
+            // 1. UI: 显示进度条
             modalOverlay.classList.remove('hidden');
             progressState.classList.remove('hidden');
             finishState.classList.add('hidden');
             progressBar.style.width = '5%';
             progressText.innerText = "Initializing engine...";
             
-            // 2. 启动一个假的进度条动画 (为了让用户感觉在动，而不是卡死)
+            // 2. 启动假进度条 (让用户感觉在动)
             let currentPct = 5;
             const fakeProgress = setInterval(() => {
-                if(currentPct < 90) { // 最多走到 90%，剩下的 10% 等真正做完再走
+                if(currentPct < 90) { 
                     currentPct += Math.random() * 5;
                     progressBar.style.width = Math.min(currentPct, 90) + '%';
                     
-                    if(currentPct > 20) progressText.innerText = "Scraping product images...";
-                    if(currentPct > 50) progressText.innerText = "AI writing viral script...";
-                    if(currentPct > 70) progressText.innerText = "Rendering video (this takes time)...";
+                    if(currentPct > 20) progressText.innerText = "Scraping product images (US Node)...";
+                    if(currentPct > 50) progressText.innerText = "DeepSeek writing viral script...";
+                    if(currentPct > 70) progressText.innerText = "Rendering video (Waking up server)...";
                 }
             }, 1000);
 
             try {
-                // 3. 发送真实的请求给后端
-                // 创建 FormData
-                const formData = new FormData();
-                formData.append('url', url);
-
-                const response = await fetch('/api/generate', {
+                // ============================================================
+                // 🟢 关键修改：指向你的 Render 后端地址
+                // ============================================================
+                const BACKEND_URL = "https://url2video-fbp4.onrender.com";
+                
+                // 发送请求
+                const response = await fetch(`${BACKEND_URL}/api/generate`, {
                     method: 'POST',
-                    body: formData
+                    body: new URLSearchParams({ 'url': url }) // 简单的表单格式
                 });
 
                 clearInterval(fakeProgress); // 停止假进度条
 
                 if (response.ok) {
-                    // 4. 请求成功，拿到视频 Blob
+                    // 4. 成功！拿到视频
                     progressBar.style.width = '100%';
                     progressText.innerText = "Done!";
                     
                     const blob = await response.blob();
                     const videoUrl = URL.createObjectURL(blob);
                     
-                    // 5. 显示完成状态，并提供下载/预览
+                    // 5. 显示下载页
                     setTimeout(() => {
                         progressState.classList.add('hidden');
                         finishState.classList.remove('hidden');
                         
-                        // 替换完成页面的文案和按钮行为
                         const finishTitle = finishState.querySelector('h3');
                         finishTitle.innerText = "Video Generated! 🎉";
                         
@@ -248,7 +248,7 @@ async function startDemo() {
                         downloadBtn.onclick = () => {
                             const a = document.createElement('a');
                             a.href = videoUrl;
-                            a.download = "my_viral_video.mp4";
+                            a.download = "url2video_result.mp4";
                             document.body.appendChild(a);
                             a.click();
                             document.body.removeChild(a);
@@ -256,16 +256,29 @@ async function startDemo() {
                     }, 500);
 
                 } else {
-                    alert("Error generating video. Please try again.");
+                    const errData = await response.json().catch(() => ({}));
+                    alert("Error: " + (errData.message || "Server Error"));
                     closeModal();
                 }
 
             } catch (error) {
                 clearInterval(fakeProgress);
                 console.error(error);
-                alert("Server connection failed. Is app.py running?");
+                alert("Connection failed. Render server might be sleeping, please try again in 1 minute.");
                 closeModal();
             }
+        }
+
+        // 辅助函数
+        const modalOverlay = document.getElementById('modalOverlay');
+        const progressState = document.getElementById('progressState');
+        const finishState = document.getElementById('finishState');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const urlInput = document.getElementById('urlInput');
+
+        function closeModal() {
+            modalOverlay.classList.add('hidden');
         }
     </script>
 </body>
