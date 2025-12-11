@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Url2Video.ai - Turn Product Links into Viral Videos</title>
+    
+    <title>Url2Video.ai | AI Product Video Generator for Shopify & Amazon</title>
+    <meta name="description" content="Turn product links into viral TikTok marketing videos in seconds. AI scrapes your URL, writes scripts, and renders videos automatically. No editing skills required.">
+    <meta name="keywords" content="AI video generator, url to video, ecommerce video maker, shopify video tool, tiktok ad generator, dropshipping tools, amazon video creator">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://url2video.ai/">
+    <meta property="og:title" content="Url2Video.ai - Instant E-commerce Video Maker">
+    <meta property="og:description" content="Paste a link, get a viral video. The fastest way to create content for TikTok, Reels, and Shorts.">
+    <meta property="og:image" content="https://placehold.co/1200x630/4F46E5/ffffff?text=Url2Video+AI+Preview"> 
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://url2video.ai/">
+    <meta name="twitter:title" content="Url2Video.ai - AI Video Generator">
+    <meta name="twitter:description" content="Turn product URLs into viral videos instantly.">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/4F46E5/ffffff?text=Url2Video+AI+Preview">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -31,7 +47,7 @@
         </div>
         <div class="hidden md:flex gap-8 text-gray-600 font-medium">
             <a href="#" class="hover:text-indigo-600">Features</a>
-            <a href="#" class="hover:text-indigo-600">Pricing</a>
+            <a href="pricing.html" class="hover:text-indigo-600">Pricing</a>
             <a href="#" class="hover:text-indigo-600">API Docs</a>
         </div>
         <div>
@@ -58,7 +74,7 @@
             <div class="bg-white p-2 rounded-2xl shadow-xl flex flex-col md:flex-row gap-2 border border-gray-100 max-w-3xl mx-auto transform transition hover:scale-[1.01]">
                 <div class="flex-grow flex items-center px-4 bg-gray-50 rounded-xl">
                     <i class="fa-solid fa-link text-gray-400 mr-3"></i>
-                    <input type="text" id="urlInput" placeholder="Paste product URL here (e.g. amazon.com/dp/...)" class="w-full bg-transparent border-none focus:ring-0 py-4 text-gray-700 outline-none">
+                    <input type="text" id="urlInput" placeholder="Paste product URL here (e.g. colourpop.com/products/...)" class="w-full bg-transparent border-none focus:ring-0 py-4 text-gray-700 outline-none">
                 </div>
                 <button onclick="startDemo()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl transition flex items-center justify-center gap-2 text-lg shadow-lg shadow-indigo-200">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Generate
@@ -184,7 +200,7 @@
 
     </div>
 
-<script>
+    <script>
         async function startDemo() {
             const url = urlInput.value.trim();
             if(!url) {
@@ -215,7 +231,7 @@
 
             try {
                 // ============================================================
-                // 🟢 关键修改：指向你的 Render 后端地址
+                // 🟢 关键配置：指向你的 Render 生产环境后端
                 // ============================================================
                 const BACKEND_URL = "https://url2video-fbp4.onrender.com";
                 
@@ -245,14 +261,18 @@
                         
                         const downloadBtn = finishState.querySelector('button.bg-indigo-600');
                         downloadBtn.innerText = "Download Video";
-                        downloadBtn.onclick = () => {
+                        // 清空原有的点击事件，防止冲突
+                        downloadBtn.onclick = null;
+                        
+                        // 绑定新的下载事件
+                        downloadBtn.addEventListener('click', () => {
                             const a = document.createElement('a');
                             a.href = videoUrl;
                             a.download = "url2video_result.mp4";
                             document.body.appendChild(a);
                             a.click();
                             document.body.removeChild(a);
-                        };
+                        });
                     }, 500);
 
                 } else {
