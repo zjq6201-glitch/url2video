@@ -2,7 +2,10 @@ import os
 import requests
 import asyncio
 import edge_tts
-import pyttsx3
+try:
+    import pyttsx3
+except ImportError:
+    pyttsx3 = None
 from moviepy.editor import *
 
 # 临时文件夹
@@ -26,6 +29,11 @@ def download_image(url, index):
 
 def generate_voiceover_offline(text, filename):
     """【备选方案】使用系统自带的离线语音 (pyttsx3)"""
+
+    if pyttsx3 is None:
+        print("❌ 服务器环境未安装 pyttsx3，无法使用离线语音。")
+        raise Exception("Offline TTS not available on server")
+
     print(f"🐢 网络不通，切换到离线语音引擎...")
     engine = pyttsx3.init()
     voices = engine.getProperty('voices')
