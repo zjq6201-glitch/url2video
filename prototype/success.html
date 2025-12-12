@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Url2Video.ai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+
+    <nav class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
+        <a href="index.html" class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
+            <i class="fa-solid fa-bolt"></i> Url2Video<span class="text-gray-400 font-light text-sm">.ai</span>
+        </a>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center px-4">
+        <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl text-center border border-gray-100">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fa-solid fa-check text-4xl text-green-500"></i>
+            </div>
+            
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
+            <p class="text-gray-500 mb-8">Thank you for your purchase.</p>
+
+            <div class="bg-indigo-50 p-4 rounded-xl text-left mb-8">
+                <h3 class="font-bold text-indigo-900 mb-1">What happens next?</h3>
+                <p class="text-sm text-indigo-700 leading-relaxed">
+                    We have received your order. Your <strong>50 Video Credits</strong> are being added to your account manually.
+                    <br><br>
+                    Please allow <strong>10-30 minutes</strong> for the credits to appear. You will receive a confirmation email shortly.
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                <a href="index.html" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition">
+                    Create New Video
+                </a>
+                <a href="mailto:support@url2video.ai" class="block text-sm text-gray-400 hover:text-gray-600">
+                    Need help? Contact Support
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script
+      async
+      crossorigin="anonymous"
+      data-clerk-publishable-key="pk_test_你的Key填在这里" 
+      src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+      type="text/javascript"
+    ></script>
+    <script>
+        window.addEventListener("load", async function () {
+            await Clerk.load();
+        });
+    </script>
+
+</body>
+</html>
