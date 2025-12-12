@@ -8,16 +8,23 @@ except ImportError:
     pyttsx3 = None
 from moviepy.editor import *
 
-# 临时文件夹
+# 临时文件夹配置
 TEMP_DIR = "temp_assets"
 if not os.path.exists(TEMP_DIR):
     os.makedirs(TEMP_DIR)
 
+# ==========================================
+# 🛠️ 工具函数
+# ==========================================
+
 def download_image(url, index):
-    """下载图片"""
+    """下载图片并保存到临时目录"""
     try:
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url, headers=headers, timeout=15)
+        # 伪装浏览器头，防止某些 CDN 拒绝访问
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        response = requests.get(url, headers=headers, timeout=10)
         if response.status_code == 200:
             filename = os.path.join(TEMP_DIR, f"image_{index}.jpg")
             with open(filename, 'wb') as f:
@@ -27,121 +34,158 @@ def download_image(url, index):
         print(f"⚠️ 图片下载失败 {url}: {e}")
     return None
 
-def generate_voiceover_offline(text, filename):
-    """【备选方案】使用系统自带的离线语音 (pyttsx3)"""
-
-    if pyttsx3 is None:
-        print("❌ 服务器环境未安装 pyttsx3，无法使用离线语音。")
-        raise Exception("Offline TTS not available on server")
-
-    print(f"🐢 网络不通，切换到离线语音引擎...")
-    engine = pyttsx3.init()
-    voices = engine.getProperty('voices')
-    for voice in voices:
-        if "female" in voice.name.lower() or "ziwei" in voice.name.lower():
-            engine.setProperty('voice', voice.id)
-            break
-            
-    engine.save_to_file(text, filename)
-    engine.runAndWait()
-    return filename
-
 async def generate_voiceover(text, index):
-    """尝试生成语音：优先 Edge-TTS，失败则用离线"""
+    """
+    生成语音：
+    1. 优先使用 Edge-TTS (效果最好的免费 AI 语音)
+    2. 失败则尝试 pyttsx3 (机械音兜底)
+    """
     filename = os.path.join(TEMP_DIR, f"voice_{index}.mp3")
     
-    # 方案 A: Edge-TTS
+    # 方案 A: Edge-TTS (推荐)
     try:
-        print(f"🎙️ [Edge-TTS] 正在生成语音片段 {index}...")
+        # 选用了 'en-US-AriaNeural'，这是一个非常自然的女声
         communicate = edge_tts.Communicate(text, "en-US-AriaNeural") 
         await communicate.save(filename)
         return filename
     except Exception as e:
-        print(f"⚠️ Edge-TTS 连接失败 ({e})")
+        print(f"⚠️ Edge-TTS 生成失败 ({e})，尝试切换备用方案...")
         
-    # 方案 B: 离线兜底
-    try:
-        generate_voiceover_offline(text, filename)
-        return filename
-    except Exception as e:
-        print(f"❌ 离线语音也失败了: {e}")
-        return None
+    # 方案 B: 离线引擎 (仅作最后的救命稻草)
+    if pyttsx3:
+        try:
+            engine = pyttsx3.init()
+            engine.save_to_file(text, filename)
+            engine.runAndWait()
+            return filename
+        except Exception as e:
+            print(f"❌ 离线语音也失败: {e}")
+    
+    return None
 
-# ================= 修改重点在这里 =================
-# 1. 改为 async def
+def smart_resize_crop(clip, target_w=1080, target_h=1920):
+    """
+    🔥 核心算法：智能填充裁剪
+    确保图片填满屏幕，且画面居中，不变形
+    """
+    # 1. 计算宽高比
+    img_ratio = clip.w / clip.h
+    target_ratio = target_w / target_h
+    
+    # 2. 决定是基于宽度放大，还是基于高度放大
+    if img_ratio > target_ratio:
+        # 图片比屏幕“胖” (横图)：高度对齐，宽度两边裁掉
+        # 先把高度拉到 1920
+        clip = clip.resize(height=target_h)
+        # 再居中裁剪宽度
+        clip = clip.crop(x1=(clip.w - target_w) / 2, width=target_w, height=target_h)
+    else:
+        # 图片比屏幕“瘦” (长图)：宽度对齐，高度上下裁掉
+        # 先把宽度拉到 1080
+        clip = clip.resize(width=target_w)
+        # 再居中裁剪高度
+        clip = clip.crop(y1=(clip.h - target_h) / 2, width=target_w, height=target_h)
+        
+    return clip
+
+# ==========================================
+# 🎬 主渲染逻辑
+# ==========================================
+
 async def create_video(script_data, images_urls):
-    print("🎬 正在启动视频渲染引擎...")
+    print("🎬 [VideoEngine] 启动渲染引擎...")
 
-    # 1. 下载图片
-    print(f"⬇️ 正在下载 {len(images_urls)} 张图片素材...")
+    # 1. 预下载图片
+    print(f"⬇️ 正在下载素材 ({len(images_urls)} 张)...")
     local_images = []
-    for i, url in enumerate(images_urls[:8]): 
+    for i, url in enumerate(images_urls): 
+        # 最多只下载 8 张，多了视频太长没人看
+        if i >= 8: break 
         path = download_image(url, i)
         if path:
             local_images.append(path)
     
     if not local_images:
-        print("❌ 严重错误：没有下载到任何图片")
+        print("❌ 严重错误：没有下载到任何有效图片")
         return None
 
-    # 2. 逐个场景处理
+    # 2. 合成片段
     clips = []
     script_lines = script_data.get('script_lines', [])
-
-    print("🎞️ 开始合成片段...")
+    
+    # 如果脚本太长，图片不够用，就循环使用图片
+    print("🎞️ 开始处理场景...")
     
     for i, line in enumerate(script_lines):
-        # A. 生成音频
+        # --- A. 音频处理 ---
         voice_text = line['voiceover']
-        
-        # 2. 直接使用 await，删掉了 loop.run_until_complete
         audio_path = await generate_voiceover(voice_text, i)
         
         if not audio_path or not os.path.exists(audio_path):
-            print(f"⚠️ 跳过片段 {i}: 音频生成失败")
+            print(f"⚠️ 跳过场景 {i}: 音频缺失")
             continue
             
         try:
+            # 加载音频
             audio_clip = AudioFileClip(audio_path)
-            duration = audio_clip.duration + 0.5
+            # 每一段多留 0.3 秒，让转场更自然
+            duration = audio_clip.duration + 0.3
             
+            # --- B. 画面处理 (Smart Crop) ---
+            # 循环选取图片
             img_path = local_images[i % len(local_images)]
             
-            # 画面处理
-            clip = ImageClip(img_path).set_duration(duration)
-            clip = clip.resize(height=1920)
-            if clip.w < 1080: clip = clip.resize(width=1080)
-            clip = clip.crop(x1=clip.w/2 - 540, y1=0, width=1080, height=1920)
-            clip = clip.resize(lambda t: 1 + 0.04 * t)  
+            # 加载图片
+            img_clip = ImageClip(img_path)
             
-            clip = clip.set_audio(audio_clip)
-            clips.append(clip)
-            print(f"   ✅ 片段 {i+1} 就绪")
+            # 🌟 调用智能裁剪算法
+            img_clip = smart_resize_crop(img_clip, 1080, 1920)
+            
+            # ✨ 添加 Ken Burns 效果 (缓慢放大 1.0 -> 1.05)
+            # 这会让静态图看起来像是在“推镜头”
+            img_clip = img_clip.resize(lambda t: 1 + 0.04 * t)
+            
+            # 设置时长和音频
+            img_clip = img_clip.set_duration(duration).set_audio(audio_clip)
+            
+            # 设置淡入淡出 (防止画面跳变太生硬)
+            img_clip = img_clip.crossfadein(0.5)
+            
+            clips.append(img_clip)
+            print(f"   ✅ 场景 {i+1} 合成完毕 ({duration:.1f}s)")
             
         except Exception as e:
-            print(f"⚠️ 画面处理出错: {e}")
+            print(f"⚠️ 场景 {i} 处理出错: {e}")
 
     if not clips:
-        print("❌ 没有生成的片段")
+        print("❌ 最终没有生成任何有效片段")
         return None
 
-    # 3. 最终拼接
-    print("🚀 正在渲染最终 MP4...")
+    # 3. 最终渲染
+    print("🚀 正在编码最终 MP4 (这可能需要几十秒)...")
+    output_filename = "final_output.mp4"
+    
     try:
-        final_video = concatenate_videoclips(clips, method="compose")
-        output_filename = "final_output.mp4"
+        # 使用 compose 方法合并，支持 crossfade 过渡效果
+        final_video = concatenate_videoclips(clips, method="compose", padding=-0.5)
         
+        # 写入文件
+        # fps=24: 电影感帧率，且渲染快
+        # preset='ultrafast': 牺牲一点点压缩率，换取最快的渲染速度 (适合 Render)
+        # threads=4: 利用多核
         final_video.write_videofile(
             output_filename, 
             fps=24, 
             codec="libx264", 
             audio_codec="aac",
             threads=4,
-            preset='ultrafast'
+            preset='ultrafast',
+            logger=None # 关掉烦人的进度条打印，防止日志爆炸
         )
         
-        print(f"\n🎉 成功！视频: {os.path.abspath(output_filename)}")
+        print(f"\n🎉 视频渲染成功！文件大小: {os.path.getsize(output_filename) / 1024 / 1024:.2f} MB")
         return output_filename
+        
     except Exception as e:
-        print(f"❌ 渲染失败: {e}")
+        print(f"❌ 渲染阶段崩溃: {e}")
         return None
