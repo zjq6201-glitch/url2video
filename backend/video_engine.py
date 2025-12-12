@@ -170,20 +170,29 @@ async def create_video(script_data, images_urls):
         final_video = concatenate_videoclips(clips, method="compose", padding=-0.5)
         
         # 写入文件
-        # fps=24: 电影感帧率，且渲染快
-        # preset='ultrafast': 牺牲一点点压缩率，换取最快的渲染速度 (适合 Render)
-        # threads=4: 利用多核
+        # 🔥 优化参数：大幅压缩文件体积，防止超过 Supabase 50MB 限制
         final_video.write_videofile(
             output_filename, 
-            fps=24, 
-            codec="libx264", 
-            audio_codec="aac",
-            threads=4,
-            preset='ultrafast',
-            logger=None # 关掉烦人的进度条打印，防止日志爆炸
+            fps=24,                 # 电影感帧率
+            codec="libx264",        # H.264 编码 (兼容性最好)
+            audio_codec="aac",      # 音频编码
+            threads=4,              # 多线程
+            
+            # 🔥 关键修改点 🔥
+            preset='medium',        # 改为 medium (ultrafast 生成的文件巨大，medium 压缩率更高)
+            bitrate="2500k",        # 限制视频码率为 2.5Mbps (TikTok 标准)，确保文件在 10MB 左右
+            audio_bitrate="128k",   # 限制音频码率
+            
+            logger=None             # 保持静默，防止日志爆炸
         )
         
-        print(f"\n🎉 视频渲染成功！文件大小: {os.path.getsize(output_filename) / 1024 / 1024:.2f} MB")
+        file_size = os.path.getsize(output_filename) / 1024 / 1024
+        print(f"\n🎉 视频渲染成功！文件大小: {file_size:.2f} MB")
+        
+        # 双重保险：如果压缩后还是超过 45MB，打印警告
+        if file_size > 45:
+            print("⚠️ 警告：视频仍然过大，可能会导致 Supabase 上传失败")
+            
         return output_filename
         
     except Exception as e:
