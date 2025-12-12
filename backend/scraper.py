@@ -1,16 +1,31 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 import json
 import re
 from urllib.parse import urlencode
+from dotenv import load_dotenv
+
+# 加载 .env 文件 (用于本地开发)
+load_dotenv()
 
 # ==========================================
-# 🔑 配置 ScraperAPI
+# 🔑 配置 ScraperAPI (已安全修复)
 # ==========================================
-SCRAPERAPI_KEY = '67882d33fd16a8d8a668f37d984cf7c2'
+# ❌ 旧方式：SCRAPERAPI_KEY = '...' (千万不要再写死在这里！)
+# ✅ 新方式：从环境变量读取
+SCRAPERAPI_KEY = os.getenv("SCRAPERAPI_KEY")
+
+if not SCRAPERAPI_KEY:
+    print("⚠️ 严重警告：未找到 SCRAPERAPI_KEY 环境变量！爬虫可能无法工作。")
+    print("请检查 .env 文件或 Render 的 Environment Variables 设置。")
 
 def get_scraperapi_url(url):
     """包装 ScraperAPI 请求"""
+    if not SCRAPERAPI_KEY:
+        print("❌ 无法构建请求：缺少 API Key")
+        return url # 降级：直接访问原链接（可能会被封，但比崩溃强）
+
     payload = {
         'api_key': SCRAPERAPI_KEY,
         'url': url,
@@ -24,7 +39,7 @@ def clean_html(raw_html):
     cleanr = re.compile('<.*?>')
     return re.sub(cleanr, '', raw_html).strip()
 
-# 🔥 新增：智能图片过滤器
+# 🔥 智能图片过滤器
 def is_high_quality_image(url):
     """过滤掉 Logo、图标、小图和无关图片"""
     if not url: return False
@@ -40,7 +55,6 @@ def is_high_quality_image(url):
         return False
         
     # 2. Shopify 特有的小图后缀过滤
-    # Shopify 会生成 _32x32, _50x50, _small, _thumb, _pico 等缩略图
     size_blacklist = ['_32x32', '_50x50', '_64x64', '_100x100', '_small', '_thumb', '_icon', '_pico', '_compact']
     if any(x in url_lower for x in size_blacklist):
         return False
