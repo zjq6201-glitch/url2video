@@ -28,71 +28,58 @@ def clean_json_output(content):
     content = re.sub(r'```$', '', content)
     return content.strip()
 
-def generate_script(product_data):
-    title = product_data.get('title', 'Unknown Product')
-    description = product_data.get('description', '')[:800]
-
-    print(f"🧠 AI 导演 (DeepSeek) 正在构思脚本: {title}...")
-
-    # --- 核心提示词 ---
+def generate_script(product_info):
+    print("✍️ DeepSeek is writing a viral script...")
+    
+    # 这里的 Prompt 是核心！我们要教 AI 怎么写出爆款
+    # 结构：Hook (3秒黄金开场) -> Pain (痛点) -> Solution (产品) -> CTA (号召购买)
     system_prompt = """
-    You are an expert short-video director for TikTok and Reels.
-    Your task is to convert product information into a high-converting, viral video script (30-45 seconds).
+    You are a world-class TikTok Dropshipping Copywriter. 
+    Your goal is to write a high-converting, viral video script (30-45 seconds) for a product.
 
-    ### SCRIPT STRUCTURE (Strictly follow this flow):
-    1. HOOK (0-3s): Visually striking or controversial statement to stop scrolling.
-    2. PAIN POINT (3-10s): The problem the viewer is facing.
-    3. SOLUTION (10-25s): How this product solves it (Key Features).
-    4. CTA (25-30s): Strong Call to Action (e.g., "Link in bio", "Get yours now").
+    STRICT RULES:
+    1. STRUCTURE:
+       - [0-3s] THE HOOK: A shocking question or statement to stop scrolling immediately.
+       - [3-15s] THE PROBLEM: Agitate a relatable pain point. Make the viewer feel it.
+       - [15-30s] THE SOLUTION: Introduce the product as the ultimate magic fix.
+       - [30-40s] THE CTA: A strong call to action (e.g., "Get yours now", "Link in bio", "50% off today").
+    
+    2. TONE:
+       - Use Gen-Z slang (e.g., "Game changer", "Obsessed", "Literal life saver").
+       - High energy, fast-paced, punchy sentences.
+       - NO "Hello everyone", NO "Welcome to my video". Jump STRAIGHT into the hook.
+       - Use emojis suitable for the text.
 
-    ### OUTPUT FORMAT:
-    You must output valid JSON only. Do not add conversational text.
-    The JSON structure must be:
-    {
-      "script_lines": [
-        {
-          "scene_index": 1,
-          "duration": "3s",
-          "visual_description": "Detailed visual description for AI video generator...", 
-          "voiceover": "The spoken words..."
-        }
-      ]
-    }
+    3. FORMAT:
+       - Return ONLY the raw text of the script. Do not label "Hook:" or "Body:".
+       - Keep it under 150 words total.
     """
 
-    user_prompt = f"""
-    Product Name: {title}
-    Product Description: {description}
-    """
+    user_prompt = f"Product Description: {product_info}\n\nWrite the script now."
 
     try:
+        client = OpenAI(
+            api_key=DEEPSEEK_API_KEY, 
+            base_url="https://api.deepseek.com"
+        )
+
         response = client.chat.completions.create(
-            model="deepseek-chat", 
+            model="deepseek-chat",
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
+                {"role": "user", "content": user_prompt},
             ],
-            temperature=0.7,
-            response_format={ "type": "json_object" } 
+            stream=False
         )
         
-        script_raw = response.choices[0].message.content
-        
-        # 清洗数据
-        script_clean = clean_json_output(script_raw)
-        
-        # 解析 JSON
-        script_json = json.loads(script_clean)
-        
-        print("✅ 脚本创作完成！")
-        return script_json
+        script = response.choices[0].message.content.strip()
+        print(f"✅ Script generated: {script[:50]}...")
+        return script
 
     except Exception as e:
-        print(f"❌ AI 生成失败: {e}")
-        # 打印原始返回以便调试
-        if 'script_raw' in locals():
-            print(f"调试-原始返回: {script_raw}")
-        return None
+        print(f"❌ Script generation failed: {e}")
+        # 如果 AI 挂了，用这个保底文案
+        return "Wait, have you seen this? This product is literally a game changer! It solves your biggest problem instantly. I am actually obsessed. You need to grab this before it sells out! Link in bio! 🔥"
 
 # --- 单独测试入口 ---
 if __name__ == "__main__":
