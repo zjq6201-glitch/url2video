@@ -4,11 +4,10 @@ import re
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# 1. 加载环境变量
+# 加载环境变量
 load_dotenv()
 
-# 2. 初始化 DeepSeek 客户端
-# 注意：DeepSeek 完美兼容 OpenAI 库，只需修改 base_url
+# 初始化 DeepSeek (兼容 OpenAI 格式)
 client = OpenAI(
     api_key=os.getenv("DEEPSEEK_API_KEY"),
     base_url="https://api.deepseek.com"
@@ -16,85 +15,106 @@ client = OpenAI(
 
 def clean_json_output(content):
     """
-    有时候 AI 会返回 ```json ... ``` 格式，我们需要把 markdown 符号去掉
-    才能被 json.loads 解析
+    清洗 AI 返回的 JSON 字符串
+    防止 AI 加了 ```json ... ``` 包裹导致解析失败
     """
-    # 修复点：给正则表达式加上了引号 r'...'
-    # 去掉开头的 ```json
+    if not content: return "{}"
+    # 去掉 markdown 代码块标记
     content = re.sub(r'^```json\s*', '', content)
-    # 去掉开头的 ```
     content = re.sub(r'^```\s*', '', content)
-    # 去掉结尾的 ```
     content = re.sub(r'```$', '', content)
     return content.strip()
 
 def generate_script(product_info):
-    print("✍️ DeepSeek is writing a viral script...")
+    print("✍️ DeepSeek is writing a structured script...")
     
-    # 这里的 Prompt 是核心！我们要教 AI 怎么写出爆款
-    # 结构：Hook (3秒黄金开场) -> Pain (痛点) -> Solution (产品) -> CTA (号召购买)
+    # 🔥 核心修改：要求 AI 返回 JSON 格式
     system_prompt = """
-    You are a world-class TikTok Dropshipping Copywriter. 
-    Your goal is to write a high-converting, viral video script (30-45 seconds) for a product.
+    You are a professional TikTok video director.
+    Your job is to create a structured video script JSON for a product.
 
-    STRICT RULES:
-    1. STRUCTURE:
-       - [0-3s] THE HOOK: A shocking question or statement to stop scrolling immediately.
-       - [3-15s] THE PROBLEM: Agitate a relatable pain point. Make the viewer feel it.
-       - [15-30s] THE SOLUTION: Introduce the product as the ultimate magic fix.
-       - [30-40s] THE CTA: A strong call to action (e.g., "Get yours now", "Link in bio", "50% off today").
-    
-    2. TONE:
-       - Use Gen-Z slang (e.g., "Game changer", "Obsessed", "Literal life saver").
-       - High energy, fast-paced, punchy sentences.
-       - NO "Hello everyone", NO "Welcome to my video". Jump STRAIGHT into the hook.
-       - Use emojis suitable for the text.
+    INPUT: Product Title & Description
+    OUTPUT: A strictly valid JSON object.
 
-    3. FORMAT:
-       - Return ONLY the raw text of the script. Do not label "Hook:" or "Body:".
-       - Keep it under 150 words total.
+    JSON STRUCTURE RULES:
+    {
+      "script_lines": [
+        {
+          "duration": 5,
+          "visual_description": "Close up shot of the product texture",
+          "voiceover": "Stop scrolling! You need to see this."
+        },
+        {
+          "duration": 4,
+          "visual_description": "Person using the product happily",
+          "voiceover": "This literally changed my life."
+        }
+      ]
+    }
+
+    CONTENT RULES:
+    1. Total duration: 30-45 seconds.
+    2. Tone: Viral, High Energy, Gen-Z Slang, Urgent.
+    3. Structure: Hook -> Pain Point -> Solution -> CTA.
+    4. NO markdown, NO explanations, ONLY JSON.
     """
 
-    user_prompt = f"Product Description: {product_info}\n\nWrite the script now."
+    user_prompt = f"Product Info: {product_info}\n\nGenerate the JSON script now."
 
     try:
-        client = OpenAI(
-            api_key=DEEPSEEK_API_KEY, 
-            base_url="https://api.deepseek.com"
-        )
-
         response = client.chat.completions.create(
             model="deepseek-chat",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            stream=False
+            stream=False,
+            temperature=0.7 
         )
         
-        script = response.choices[0].message.content.strip()
-        print(f"✅ Script generated: {script[:50]}...")
-        return script
+        raw_content = response.choices[0].message.content.strip()
+        print(f"🤖 AI Raw Output (First 50 chars): {raw_content[:50]}...")
+        
+        # 🧹 清洗并解析 JSON
+        clean_content = clean_json_output(raw_content)
+        script_data = json.loads(clean_content)
+        
+        # 🛡️ 双重保险：确保有 script_lines 键
+        if "script_lines" not in script_data:
+            # 如果 AI 返回了 JSON 但格式不对，尝试修复
+            print("⚠️ AI JSON 缺少 script_lines，尝试自动修复...")
+            return {
+                "script_lines": [
+                    {
+                        "duration": 5, 
+                        "visual_description": "Product showcase", 
+                        "voiceover": str(raw_content)[:100] # 降级处理
+                    }
+                ]
+            }
 
+        print("✅ Script JSON generated successfully!")
+        return script_data
+
+    except json.JSONDecodeError:
+        print(f"❌ JSON Parsing Failed. Raw output: {raw_content}")
+        # 兜底逻辑：如果 JSON 解析彻底失败，手动构造一个简单的结构
+        return {
+            "script_lines": [
+                {
+                    "duration": 5,
+                    "visual_description": "Show product image",
+                    "voiceover": "Check out this amazing product! It is a total game changer. Link in bio!"
+                }
+            ]
+        }
     except Exception as e:
-        print(f"❌ Script generation failed: {e}")
-        # 如果 AI 挂了，用这个保底文案
-        return "Wait, have you seen this? This product is literally a game changer! It solves your biggest problem instantly. I am actually obsessed. You need to grab this before it sells out! Link in bio! 🔥"
+        print(f"❌ Script generation error: {e}")
+        return None
 
-# --- 单独测试入口 ---
+# --- 测试入口 ---
 if __name__ == "__main__":
-    # 模拟数据 (Ritz 眼影)
-    test_product = {
-        "title": "ColourPop Ritz Super Shock Shadow",
-        "description": "Our famous OG crème-to-powder formula delivers supercharged sparkling colour with minimal creasing, fading or fallout."
-    }
-    
-    script = generate_script(test_product)
-    
-    if script:
-        print("\n🎬 --- DeepSeek 导演生成的脚本 ---")
-        for line in script.get('script_lines', []):
-            print(f"[{line['duration']}]")
-            print(f"   👁️ 画面: {line['visual_description']}")
-            print(f"   🗣️ 旁白: {line['voiceover']}")
-            print("-" * 30)
+    # 本地测试数据
+    test_prod = {'title': 'Test Lipstick', 'description': 'Red and shiny'}
+    res = generate_script(test_prod)
+    print(json.dumps(res, indent=2))
