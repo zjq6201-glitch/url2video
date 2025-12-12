@@ -42,7 +42,6 @@ def deduct_credit(user_id):
     """扣除 1 个积分"""
     if not supabase: return
     try:
-        # RPC (远程存储过程) 是更安全的方法，但这里为了简单，我们先查再改
         # 1. 获取当前积分
         current = get_or_create_user(user_id)
         if current > 0:
@@ -58,14 +57,16 @@ def upload_video_to_storage(local_path, user_id):
     
     try:
         file_name = f"{user_id}_{int(time.time())}.mp4"
-        bucket_name = "videos" # 刚才你在 Supabase 建的桶名字
+        bucket_name = "videos" 
         
         print(f"☁️ 正在上传视频到 Supabase: {file_name}")
         
         with open(local_path, 'rb') as f:
+            # 🔥🔥🔥 修复点在这里 🔥🔥🔥
+            # 之前写了两个 file=...，现在第一个改为 path=
             supabase.storage.from_(bucket_name).upload(
-                file=file_name,
-                file=f,
+                path=file_name,              # 云端保存的文件名/路径
+                file=f,                      # 实际的文件对象
                 file_options={"content-type": "video/mp4"}
             )
             
@@ -89,7 +90,7 @@ def save_history(user_id, source_url, video_url, script_content):
             "user_id": user_id,
             "source_url": source_url,
             "video_url": video_url,
-            "script_content": str(script_content) # 转字符串防止 json 报错
+            "script_content": str(script_content) 
         }).execute()
         print("📝 历史记录已保存")
     except Exception as e:
