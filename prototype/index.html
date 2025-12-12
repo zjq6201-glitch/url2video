@@ -4,10 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Url2Video.ai | AI Product Video Generator for Shopify & Amazon</title>
-    <meta name="description" content="Turn product links into viral TikTok marketing videos in seconds. AI scrapes your URL, writes scripts, and renders videos automatically.">
-    <meta property="og:title" content="Url2Video.ai - Instant E-commerce Video Maker">
-    <meta property="og:description" content="Paste a link, get a viral video. The fastest way to create content for TikTok, Reels, and Shorts.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡️</text></svg>">
+
+    <title>Url2Video.ai | Turn Product Links into TikTok Videos with AI</title>
+    <meta name="description" content="The #1 AI E-commerce Video Generator. Turn Shopify, Amazon, and TikTok Shop product links into viral marketing videos for TikTok, Reels, and YouTube Shorts in seconds.">
+    <meta name="keywords" content="AI video generator, url to video, shopify to tiktok, amazon product video, dropshipping video maker, ecommerce marketing tool">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://url2video.ai/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://url2video.ai/">
+    <meta property="og:title" content="Url2Video.ai - Instant Viral Video Maker for E-commerce">
+    <meta property="og:description" content="Paste a product link, get a high-converting video script and render in 30 seconds. Perfect for Dropshipping and TikTok Ads.">
+    <meta property="og:image" content="https://placehold.co/1200x630/4f46e5/ffffff?text=Url2Video+AI+Preview">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://url2video.ai/">
+    <meta name="twitter:title" content="Url2Video.ai | AI Product Video Generator">
+    <meta name="twitter:description" content="Turn product URLs into viral videos instantly. No editing skills required.">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/4f46e5/ffffff?text=Url2Video+AI+Preview">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,9 +50,25 @@
             display: none;
         }
     </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Url2Video.ai",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "AI tool that converts product URLs into marketing videos for TikTok and Instagram Reels.",
+      "featureList": "URL scraping, AI script writing, Video rendering, Text-to-Speech"
+    }
+    </script>
 </head>
 <body class="bg-gray-50 text-gray-900">
-    <!-- DEV MODE 标签 -->
     <div id="devModeBadge" class="dev-mode-badge">🔧 DEV MODE</div>
 
     <nav class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
@@ -73,14 +104,14 @@
                 Turn Product Links into <br>
                 <span class="gradient-text">Viral Marketing Videos</span>
             </h1>
-            <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-                Paste any product URL. <strong>Url2Video.ai</strong> automatically scrapes images, writes scripts, and renders high-converting videos in 30 seconds.
-            </p>
+            <h2 class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto font-light">
+                Paste any product URL. <strong>Url2Video.ai</strong> automatically scrapes images, writes scripts, and renders high-converting videos for TikTok, Reels & Shorts.
+            </h2>
 
             <div class="bg-white p-2 rounded-2xl shadow-xl flex flex-col md:flex-row gap-2 border border-gray-100 max-w-3xl mx-auto transform transition hover:scale-[1.01]">
                 <div class="flex-grow flex items-center px-4 bg-gray-50 rounded-xl">
                     <i class="fa-solid fa-link text-gray-400 mr-3"></i>
-                    <input type="text" id="urlInput" placeholder="Paste product URL here (e.g. colourpop.com/products/...)" class="w-full bg-transparent border-none focus:ring-0 py-4 text-gray-700 outline-none">
+                    <input type="text" id="urlInput" placeholder="Paste product URL here (e.g. colourpop.com/products/...)" class="w-full bg-transparent border-none focus:ring-0 py-4 text-gray-700 outline-none" aria-label="Product URL">
                 </div>
 				<button onclick="startDemo()" class="group relative bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-lg shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-1 ring-4 ring-indigo-500/20">
 					<i class="fa-solid fa-wand-magic-sparkles group-hover:animate-spin"></i> 
@@ -96,7 +127,7 @@
                     <span class="text-xs font-bold text-gray-500">INPUT: URL</span>
                     <i class="fa-brands fa-chrome text-2xl text-gray-400"></i>
                 </div>
-                <img src="https://placehold.co/600x400/f3f4f6/a3a3a3?text=Product+Page+Screenshot" alt="Product Page" class="rounded-lg w-full">
+                <img src="https://placehold.co/600x400/f3f4f6/a3a3a3?text=Product+Page+Screenshot" alt="Product Page Screenshot - Input" class="rounded-lg w-full">
             </div>
             <div class="relative">
                 <div class="absolute -left-4 top-1/2 -translate-y-1/2 bg-white rounded-full p-3 shadow-xl z-10 hidden md:block">
@@ -107,7 +138,7 @@
                         <span class="text-xs font-bold text-gray-400">OUTPUT: Url2Video.ai</span>
                         <i class="fa-brands fa-tiktok text-white text-xl"></i>
                     </div>
-                    <img src="https://placehold.co/600x400/1f2937/FFFFFF?text=AI+Generated+Video+%E2%96%B6" alt="AI Video" class="rounded-lg w-full opacity-90">
+                    <img src="https://placehold.co/600x400/1f2937/FFFFFF?text=AI+Generated+Video+%E2%96%B6" alt="AI Generated Video Output" class="rounded-lg w-full opacity-90">
                 </div>
             </div>
         </div>
@@ -115,9 +146,13 @@
 
     <section class="py-10 border-y border-gray-200 bg-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
-            <p class="text-sm text-gray-500 font-semibold uppercase tracking-widest mb-6">Optimized for</p>
+            <h3 class="text-sm text-gray-500 font-semibold uppercase tracking-widest mb-6">Optimized for Platforms</h3>
             <div class="flex flex-wrap justify-center gap-12 text-gray-400 text-3xl opacity-60">
-                <i class="fa-brands fa-shopify"></i><i class="fa-brands fa-amazon"></i><i class="fa-brands fa-tiktok"></i><i class="fa-brands fa-instagram"></i><i class="fa-brands fa-youtube"></i>
+                <i class="fa-brands fa-shopify" title="Shopify"></i>
+                <i class="fa-brands fa-amazon" title="Amazon"></i>
+                <i class="fa-brands fa-tiktok" title="TikTok"></i>
+                <i class="fa-brands fa-instagram" title="Instagram"></i>
+                <i class="fa-brands fa-youtube" title="YouTube Shorts"></i>
             </div>
         </div>
     </section>
@@ -157,7 +192,6 @@
         </div>
     </div>
 
-    <!-- Clerk 登录脚本（生产环境加载） -->
     <script
       id="clerk-script"
       async
