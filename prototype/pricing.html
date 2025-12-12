@@ -9,146 +9,85 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        
-        .gradient-text {
-            background: linear-gradient(to right, #4F46E5, #9333EA);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
 
     <nav class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-        <a href="index.html" class="text-2xl font-bold text-indigo-600 flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
+        <a href="index.html" class="text-2xl font-bold text-indigo-600 flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-bolt"></i> Url2Video<span class="text-gray-400 font-light text-sm">.ai</span>
         </a>
         <div class="hidden md:flex gap-8 text-gray-600 font-medium">
             <a href="index.html" class="hover:text-indigo-600">Features</a>
-            <a href="#" class="text-indigo-600 font-semibold">Pricing</a> <a href="#" class="hover:text-indigo-600">API Docs</a>
+            <a href="#" class="text-indigo-600 font-bold">Pricing</a>
         </div>
-        <div>
-            <a href="#" class="px-5 py-2.5 rounded-full bg-white border border-gray-200 text-gray-700 font-medium hover:border-indigo-600 transition">Log In</a>
+        
+        <div class="flex items-center">
+            <div id="signed-out-content">
+                <a href="index.html" class="px-5 py-2.5 rounded-full bg-white border border-gray-200 text-gray-700 font-medium hover:border-indigo-600 transition">Log In</a>
+            </div>
+            <div id="signed-in-content" class="hidden">
+                <div id="user-button"></div>
+            </div>
         </div>
     </nav>
 
     <section class="pt-20 pb-12 text-center px-6">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">Simple, Transparent Pricing</h1>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-            Stop paying $100 per video. Generate viral content for pennies.
-            <br>
-            <span class="text-indigo-600 font-semibold text-sm mt-2 block"><i class="fa-solid fa-check"></i> Cancel anytime. No hidden fees.</span>
-        </p>
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Simple Pricing</h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">Start for free. Upgrade for power.</p>
     </section>
 
     <section class="pb-24 px-6">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-center">
             
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition">
-                <h3 class="text-xl font-semibold text-gray-900">Starter</h3>
-                <p class="text-sm text-gray-500 mt-2">For dropshippers & creators.</p>
-                <div class="my-6">
-                    <span class="text-4xl font-bold">$29</span><span class="text-gray-500">/mo</span>
-                </div>
-                <a href="#" class="block w-full py-3 px-4 bg-gray-50 text-gray-900 font-bold rounded-xl text-center border border-gray-200 hover:bg-gray-100 transition">
-                    Get Started
-                </a>
-                <p class="text-xs text-center text-gray-400 mt-3">~ $1.90 per video</p>
-
-                <ul class="mt-8 space-y-4 text-sm text-gray-600">
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> 15 Video Credits</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> No Watermark</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> 1080p HD Export</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Commercial Rights</li>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative z-0">
+                <h3 class="text-xl font-bold text-gray-500 uppercase tracking-wide mb-4">Starter</h3>
+                <div class="text-5xl font-bold mb-6">$0</div>
+                <p class="text-gray-500 mb-8">For testing.</p>
+                <ul class="space-y-4 mb-8 text-gray-600">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> 1 Demo Video</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Standard Speed</li>
                 </ul>
+                <a href="index.html" class="block w-full py-3 px-6 text-center rounded-xl border-2 border-indigo-100 text-indigo-600 font-bold hover:bg-indigo-50 transition">
+                    Try Generator
+                </a>
             </div>
 
-            <div class="bg-white p-10 rounded-2xl shadow-2xl border-2 border-indigo-600 transform md:scale-110 z-10 relative">
-                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
-                    Most Popular
-                </div>
-
-                <h3 class="text-2xl font-bold text-indigo-600">Pro Scaler</h3>
-                <p class="text-sm text-gray-500 mt-2">For high-volume sellers.</p>
-                <div class="my-6">
-                    <span class="text-5xl font-bold">$59</span><span class="text-gray-500">/mo</span>
-                </div>
-                <a href="#" class="block w-full py-4 px-4 bg-indigo-600 text-white font-bold rounded-xl text-center hover:bg-indigo-500 shadow-lg shadow-indigo-200 transition text-lg">
-                    Start Scaling
-                </a>
-                <p class="text-xs text-center text-gray-400 mt-3">~ Only $0.98 per video</p>
-
-                <ul class="mt-8 space-y-4 text-sm text-gray-600">
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> <strong>60 Video Credits</strong></li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-bolt text-indigo-500"></i> <strong>Bulk Generation (CSV)</strong></li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Priority Rendering</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> <strong>Premium "Human" Voices</strong></li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Multi-Language Support</li>
+            <div class="bg-white p-8 rounded-2xl shadow-2xl border-2 border-indigo-600 relative z-10 transform md:scale-105">
+                <div class="absolute top-0 right-0 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">POPULAR</div>
+                <h3 class="text-xl font-bold text-indigo-600 uppercase tracking-wide mb-4">Pro Creator</h3>
+                <div class="text-5xl font-bold mb-6">$29</div>
+                <p class="text-gray-500 mb-8">One-time payment. No subscription.</p>
+                <ul class="space-y-4 mb-8 text-gray-700">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-600"></i> <strong>50 Videos Credits</strong></li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-600"></i> Priority Rendering</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-indigo-600"></i> Commercial License</li>
                 </ul>
+                
+                <a href="https://buy.stripe.com/test_28EcN74U1a057fteYhfQI00" target="_blank" class="block w-full py-4 px-6 text-center rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/30 transition">
+                    Buy Credits
+                </a>
             </div>
 
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition">
-                <h3 class="text-xl font-semibold text-gray-900">Agency</h3>
-                <p class="text-sm text-gray-500 mt-2">For marketing teams.</p>
-                <div class="my-6">
-                    <span class="text-4xl font-bold">$199</span><span class="text-gray-500">/mo</span>
-                </div>
-                <a href="#" class="block w-full py-3 px-4 bg-white text-gray-900 font-bold rounded-xl text-center border border-gray-200 hover:bg-gray-50 transition">
-                    Contact Sales
-                </a>
-                <p class="text-xs text-center text-gray-400 mt-3">Custom pricing</p>
-
-                <ul class="mt-8 space-y-4 text-sm text-gray-600">
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> <strong>300+ Credits</strong></li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> API Access</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Dedicated Manager</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-green-500"></i> Custom Branding</li>
-                </ul>
-            </div>
-
-        </div>
-
-        <div class="text-center mt-12">
-            <p class="text-gray-500">Not ready to commit? 
-                <a href="#" class="text-indigo-600 font-semibold hover:underline">Start with a Free Trial (1 credit/mo)</a>
-            </p>
         </div>
     </section>
 
-    <section class="py-20 bg-white border-t border-gray-100">
-        <div class="max-w-3xl mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
-            
-            <div class="space-y-8">
-                <div>
-                    <h4 class="font-bold text-lg mb-2">What happens to unused credits?</h4>
-                    <p class="text-gray-500 leading-relaxed">Unused credits roll over to the next month as long as your subscription is active. You paid for them, you keep them.</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-lg mb-2">Can I use the videos for ads?</h4>
-                    <p class="text-gray-500 leading-relaxed">Yes! All paid plans (Starter & Pro) come with full Commercial Rights. You own the video completely and can run ads on TikTok, FB, or Instagram without copyright issues.</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-lg mb-2">How does "Bulk Generation" work?</h4>
-                    <p class="text-gray-500 leading-relaxed">Available on the Pro plan. You simply upload a CSV file with up to 50 product URLs, and our AI will generate videos for all of them simultaneously in the background.</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-lg mb-2">Can I cancel anytime?</h4>
-                    <p class="text-gray-500 leading-relaxed">Absolutely. You can cancel your subscription from your dashboard with one click. You will retain access until the end of your billing cycle.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="bg-gray-900 text-white py-12 mt-10">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <div class="text-2xl font-bold mb-6">Ready to scale your content?</div>
-            <a href="index.html" class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-full transition">
-                Create Your First Video
-            </a>
-            <p class="mt-8 text-gray-500 text-sm">© 2025 Url2Video.ai. All rights reserved.</p>
-        </div>
-    </footer>
-
+    <script
+      async
+      crossorigin="anonymous"
+      data-clerk-publishable-key="pk_test_你的Key填在这里" 
+      src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+      type="text/javascript"
+    ></script>
+    <script>
+        window.addEventListener("load", async function () {
+            await Clerk.load();
+            if (Clerk.user) {
+                document.getElementById("signed-out-content").classList.add("hidden");
+                document.getElementById("signed-in-content").classList.remove("hidden");
+                Clerk.mountUserButton(document.getElementById("user-button"));
+            }
+        });
+    </script>
 </body>
 </html>
