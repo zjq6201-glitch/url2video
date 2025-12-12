@@ -34,14 +34,16 @@
         </div>
         
         <div class="flex items-center">
-            <div id="signed-out-content">
+            <!-- 登录按钮（本地开发已禁用） -->
+            <!-- <div id="signed-out-content">
                 <button onclick="Clerk.openSignIn()" class="px-5 py-2.5 rounded-full bg-white border border-gray-200 text-gray-700 font-medium hover:border-indigo-600 transition shadow-sm hover:shadow">
                     Log In / Sign Up
                 </button>
             </div>
             <div id="signed-in-content" class="hidden">
                 <div id="user-button"></div>
-            </div>
+            </div> -->
+            <div class="text-sm text-gray-500">[本地开发模式]</div>
         </div>
     </nav>
 
@@ -141,13 +143,14 @@
         </div>
     </div>
 
-    <script
+    <!-- Clerk 登录脚本（本地开发已禁用） -->
+    <!-- <script
       async
       crossorigin="anonymous"
       data-clerk-publishable-key="pk_test_cHVtcGVkLWJsb3dmaXNoLTIzLmNsZXJrLmFjY291bnRzLmRldiQ" 
       src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
       type="text/javascript"
-    ></script>
+    ></script> -->
 
     <script>
         // 1. 全局变量
@@ -157,34 +160,35 @@
         const finishState = document.getElementById('finishState');
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
-        const BACKEND_URL = "https://url2video-fbp4.onrender.com"; // Render 后端地址
+        const BACKEND_URL = "http://127.0.0.1:8000"; // 本地开发地址
+        // const BACKEND_URL = "https://url2video-fbp4.onrender.com"; // Render 后端地址（生产环境）
 
-        // 2. Clerk 初始化与状态管理
-        window.addEventListener("load", async function () {
-            await Clerk.load();
+        // 2. Clerk 初始化与状态管理（本地开发已禁用）
+        // window.addEventListener("load", async function () {
+        //     await Clerk.load();
 
-            const signedOutContent = document.getElementById("signed-out-content");
-            const signedInContent = document.getElementById("signed-in-content");
+        //     const signedOutContent = document.getElementById("signed-out-content");
+        //     const signedInContent = document.getElementById("signed-in-content");
 
-            if (Clerk.user) {
-                // 已登录：显示头像，隐藏登录按钮
-                signedOutContent.classList.add("hidden");
-                signedInContent.classList.remove("hidden");
-                Clerk.mountUserButton(document.getElementById("user-button"));
-            } else {
-                // 未登录：显示登录按钮
-                signedOutContent.classList.remove("hidden");
-                signedInContent.classList.add("hidden");
-            }
-        });
+        //     if (Clerk.user) {
+        //         // 已登录：显示头像，隐藏登录按钮
+        //         signedOutContent.classList.add("hidden");
+        //         signedInContent.classList.remove("hidden");
+        //         Clerk.mountUserButton(document.getElementById("user-button"));
+        //     } else {
+        //         // 未登录：显示登录按钮
+        //         signedOutContent.classList.remove("hidden");
+        //         signedInContent.classList.add("hidden");
+        //     }
+        // });
 
         // 3. 点击生成按钮的逻辑
         async function startDemo() {
-            // A. 关键拦截：检查是否登录
-            if (!Clerk.user) {
-                Clerk.openSignIn(); // 没登录就弹出登录框
-                return;
-            }
+            // A. 关键拦截：检查是否登录（本地开发已禁用）
+            // if (!Clerk.user) {
+            //     Clerk.openSignIn(); // 没登录就弹出登录框
+            //     return;
+            // }
 
             // B. 检查 URL
             const url = urlInput.value.trim();
@@ -234,8 +238,9 @@
                         progressState.classList.add('hidden');
                         finishState.classList.remove('hidden');
                         
-                        // 个性化欢迎语
-                        const userName = Clerk.user.firstName || "Creator";
+                        // 个性化欢迎语（本地开发已禁用登录，使用默认值）
+                        // const userName = Clerk.user.firstName || "Creator";
+                        const userName = "Creator"; // 本地开发默认值
                         document.getElementById('finishMessage').innerHTML = `Hi <b>${userName}</b>, your video is ready!`;
 
                         const downloadBtn = finishState.querySelector('.download-btn');
