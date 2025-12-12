@@ -299,35 +299,63 @@
             }, 1000);
 
             try {
+                // ----------------------------------------------------
+                // 1. 确定当前的用户 ID
+                // ----------------------------------------------------
+                let userId = "guest_local"; // 默认值
+                
+                if (isLocal) {
+                    userId = "dev_user_001"; // 本地开发专用 ID
+                } else if (Clerk.user) {
+                    userId = Clerk.user.id;  // 生产环境取 Clerk ID
+                }
+
+                console.log("🚀 Sending Request for User:", userId);
+
                 // E. 发送请求给后端
+                // 关键修改：添加 user_id 字段
                 const response = await fetch(`${BACKEND_URL}/api/generate`, {
                     method: 'POST',
-                    body: new URLSearchParams({ 'url': url })
+                    body: new URLSearchParams({ 
+                        'url': url,
+                        'user_id': userId 
+                    })
                 });
 
                 clearInterval(fakeProgress);
 
                 if (response.ok) {
+                    // F. 处理 JSON 响应 (包含 Supabase 链接)
+                    const data = await response.json();
+                    
+                    const videoUrl = data.video_url;
+
+                    if (!videoUrl) {
+                         // 防御性编程：万一后端没返回 URL
+                         throw new Error("Video URL not found in response");
+                    }
+
                     progressBar.style.width = '100%';
                     progressText.innerText = "Done!";
                     
-                    const blob = await response.blob();
-                    const videoUrl = URL.createObjectURL(blob);
-                    
-                    // F. 生成成功 UI
+                    // G. 生成成功 UI
                     setTimeout(() => {
                         progressState.classList.add('hidden');
                         finishState.classList.remove('hidden');
                         
                         // 个性化欢迎语
-                        let userName = "Creator"; // 默认值
+                        let userName = "Creator"; 
                         if (!isLocal && Clerk.user) {
                             userName = Clerk.user.firstName || "Creator";
                         }
-                        document.getElementById('finishMessage').innerHTML = `Hi <b>${userName}</b>, your video is ready!`;
+                        
+                        // 显示剩余积分
+                        const creditsMsg = data.remaining_credits !== undefined ? `<br><span class="text-sm text-indigo-500">Credits left: ${data.remaining_credits}</span>` : "";
+
+                        document.getElementById('finishMessage').innerHTML = `Hi <b>${userName}</b>, your video is ready!${creditsMsg}`;
 
                         const downloadBtn = finishState.querySelector('.download-btn');
-                        // 移除旧监听器 (防止克隆元素带来的麻烦)
+                        // 移除旧监听器
                         const newBtn = downloadBtn.cloneNode(true);
                         downloadBtn.parentNode.replaceChild(newBtn, downloadBtn);
                         
@@ -335,6 +363,7 @@
                             const a = document.createElement('a');
                             a.href = videoUrl;
                             a.download = "url2video_result.mp4";
+                            a.target = "_blank"; // 新窗口打开，兼容 Supabase
                             document.body.appendChild(a);
                             a.click();
                             document.body.removeChild(a);
